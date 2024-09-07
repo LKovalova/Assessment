@@ -1,8 +1,10 @@
 package com.example.smarthome.controller;
 
+import com.example.smarthome.exception.ApplianceException;
 import com.example.smarthome.model.AirConditioner;
 import com.example.smarthome.model.Fan;
 import com.example.smarthome.model.Light;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -26,8 +28,12 @@ public class ApplianceController {
     }
 
     @PostMapping("/fan/speed/{speed}")
-    public void setFanSpeed(@PathVariable int speed) {
+    public ResponseEntity<String> setFanSpeed(@PathVariable int speed) {
+        if (speed < 0 || speed > 2) {
+            throw new IllegalArgumentException("Invalid fan speed: " + speed);
+        }
         fan.setSpeed(speed);
+        return ResponseEntity.ok("Fan speed set to " + speed);
     }
 
     @GetMapping("/fan")
@@ -36,8 +42,12 @@ public class ApplianceController {
     }
 
     @PostMapping("/airconditioner/{mode}")
-    public void setAirConditionerMode(@PathVariable String mode) {
+    public ResponseEntity<String> setAirConditionerMode(@PathVariable String mode) {
+        if (!"cool".equalsIgnoreCase(mode) && !"off".equalsIgnoreCase(mode)) {
+            throw new ApplianceException("Invalid mode: " + mode);
+        }
         airConditioner.setThermostat(mode);
+        return ResponseEntity.ok("Air conditioner set to " + mode);
     }
 
     @GetMapping("/airconditioner")
