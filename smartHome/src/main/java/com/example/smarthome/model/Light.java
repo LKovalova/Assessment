@@ -4,7 +4,7 @@ public class Light {
     private boolean isOn;
 
     public Light() {
-        this.isOn = true; // Light is on initially
+        this.isOn = true; // Light is On initially
     }
 
     public void toggleSwitch() {
